@@ -6,17 +6,22 @@ import androidx.core.widget.NestedScrollView;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private EditText mTitleText;
     private FrameLayout mScrollContainer;
     private MyScrollView mScrollView;
     private MyWebView mWebView;
@@ -32,10 +37,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        mTitleText = findViewById(R.id.web_view_title);
         mScrollContainer = findViewById(R.id.scroll_container);
         mScrollView = findViewById(R.id.scroll_view);
         mWebView = findViewById(R.id.web_view);
         mBottomListLayout = findViewById(R.id.bottom_list_layout);
+
+        mTitleText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    mWebView.loadUrl(mTitleText.getText().toString());
+                }
+                return false;
+            }
+        });
 
         mScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
@@ -58,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageFinished(WebView view, String url) {
+                mTitleText.setText(url);
             }
 
             @Override
@@ -107,6 +125,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mWebView.loadUrl("http://test.yjzsapp.com/app/wap/article.htm?articleId=5ed57a23d63341ed87adb0fd81e6c47f");
+        mWebView.loadUrl("www.mi.com");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mWebView.onDestroy();
+    }
+
+    @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+        mWebView.onTrimMemory(level);
     }
 }

@@ -5,9 +5,11 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <View
+    <!--这里为了测试暂时固定高度，实际有数据加载的话要用wrap-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/bottom_list_view"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:background="@color/colorAccent" />
+        android:layout_height="800dp"
+        android:background="@android:color/holo_orange_light" />
 
 </LinearLayout>

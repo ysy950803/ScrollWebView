@@ -43,12 +43,21 @@ public class MyWebView extends WebView {
         settings.setSupportZoom(false); // 禁止缩放
         settings.setLoadWithOverviewMode(true); // 适应屏幕
         settings.setDomStorageEnabled(true); // 离线加载
-        // 缓存，可以不设
-        settings.setAppCacheEnabled(true);
-        settings.setAppCachePath(context.getCacheDir().getPath());
         // 支持Http和Https混合
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
+        // 缓存，可以不设，这里path是随便写的，可以自定义
+        settings.setAppCacheEnabled(true);
+        settings.setAppCachePath(context.getCacheDir().getPath());
+    }
+
+    @Override
+    public void loadUrl(String url) {
+        if (url.startsWith("http://") || url.startsWith("https://")) {
+            super.loadUrl(url);
+        } else {
+            super.loadUrl("http://" + url);
         }
     }
 
